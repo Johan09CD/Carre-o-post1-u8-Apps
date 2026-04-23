@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun observeViewModel() {
         viewModel.products.observe(this) { products ->
-            Trace.beginSection("submitList_update")
+            Trace.beginSection("submitList_optimized")
             adapter.submitList(products)
             Trace.endSection()
         }

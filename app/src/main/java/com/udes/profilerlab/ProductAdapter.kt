@@ -2,19 +2,14 @@ package com.udes.profilerlab
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.udes.profilerlab.databinding.ItemProductBinding
 
-// ❌ Versión ineficiente — SIN DiffUtil
-class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
-
-    private var items: List<ProductItem> = emptyList()
-
-    // notifyDataSetChanged() redibuja TODA la lista aunque solo cambie 1 item
-    fun submitList(newItems: List<ProductItem>) {
-        items = newItems
-        notifyDataSetChanged()
-    }
+// ✅ Versión optimizada con ListAdapter + DiffUtil
+class ProductAdapter : ListAdapter<ProductItem, ProductAdapter.ViewHolder>(
+    ProductDiffCallback()
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemProductBinding.inflate(
@@ -24,10 +19,8 @@ class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = items.size
 
     inner class ViewHolder(private val binding: ItemProductBinding)
         : RecyclerView.ViewHolder(binding.root) {
